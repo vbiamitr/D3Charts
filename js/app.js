@@ -33,13 +33,12 @@
         var containerHeight  = +div._groups[0][0].clientHeight; 			
 		var width = containerWidth - margin.left - margin.right;
 		var height = containerHeight - margin.top - margin.bottom;
-		var barWidth = (width/data.length) - columnPadding;
 		var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
         var y = d3.scaleLinear().rangeRound([height, 0]);
 
         x.domain(data.map(function(d){ return d.category; }));
         y.domain([0, d3.max(data, function(d){ return d.m1;})]);
-        
+
         // Making svg width and height equal to container's width and height
         var svg = div.select("svg")                    
                     .attr("width", containerWidth)
@@ -62,7 +61,7 @@
             .attr("class", "bar")
             .attr("x", function(d, i){ return x(d.category);})
             .attr("y", function(d){ return y(d.m1)})
-            .attr("width", x.bandwidth())
+            .attr("width", x.bandwidth()) // x.bandwidth() eliminates the hassles of calculating the column width and the innerPadding manually.
             .attr("height", function(d){ return height - y(d.m1)});                    
         rect.exit().remove();
         
