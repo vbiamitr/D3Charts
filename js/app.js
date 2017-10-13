@@ -54,6 +54,16 @@
                             .attr("height", height)        
                             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        // Adding Tooltip
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                return "<strong>Measure:</strong> <span style='color:red'>" + d.m1 + "</span>";
+            });
+
+        rectGroup.call(tip);
+
         // Adding Columns
 		var rect = rectGroup.selectAll(".bar").data(data); 
         rect.enter()
@@ -62,7 +72,9 @@
             .attr("x", function(d, i){ return x(d.category);})
             .attr("y", function(d){ return y(d.m1)})
             .attr("width", x.bandwidth()) // x.bandwidth() eliminates the hassles of calculating the column width and the innerPadding manually.
-            .attr("height", function(d){ return height - y(d.m1)});                    
+            .attr("height", function(d){ return height - y(d.m1)})
+            .on("mouseover", tip.show)
+            .on("mouseout", tip.hide);                    
         rect.exit().remove();
         
         // Adding DataLabels
@@ -87,6 +99,9 @@
         rectGroup.append("g")
             .attr("class", "axis y-axis")
             .call(d3.axisLeft(y));
-	}
+
+        
+
+    }
 	
 }())
